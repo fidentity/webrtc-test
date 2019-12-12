@@ -90,7 +90,7 @@ function gotStream(stream) {
   window.stream = stream; // make stream available to console
   videoElement.srcObject = stream;
 
-  jsonString = JSON.stringify(stream.getVideoTracks()[0].getCapabilities());
+  var jsonString = JSON.stringify(stream.getVideoTracks()[0].getCapabilities());
   document.getElementById("capabilities").innerHTML = jsonString;
 
   // Refresh button list in case labels have become available
