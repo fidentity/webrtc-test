@@ -92,7 +92,8 @@ function gotStream(stream) {
 
   var cap = stream.getVideoTracks()[0].getCapabilities();
   console.log("cap", cap);
-  var jsonString = JSON.stringify(cap);
+
+  var jsonString = JSON.stringify(cap, null, 2);
   document.getElementById("capabilities").innerHTML = jsonString;
 
   // Refresh button list in case labels have become available
