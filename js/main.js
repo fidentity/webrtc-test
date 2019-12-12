@@ -91,9 +91,7 @@ function gotStream(stream) {
   videoElement.srcObject = stream;
 
   jsonString = JSON.stringify(stream.getVideoTracks()[0].getCapabilities());
-
-  // document.getElementById("capabilities").innerText = jsonString;
-  document.getElementById("capabilities").innerHtml = "Fooo";
+  document.getElementById("capabilities").innerHTML = jsonString;
 
   // Refresh button list in case labels have become available
   return navigator.mediaDevices.enumerateDevices();
