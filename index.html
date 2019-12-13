@@ -1,11 +1,5 @@
 <!DOCTYPE html>
-<!--
- *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
--->
+
 <html>
   <head>
     <meta charset="utf-8" />
@@ -22,7 +16,7 @@
 
     <base target="_blank" />
 
-    <title>Select audio and video sources</title>
+    <title>WebRtc Debug</title>
 
     <link rel="icon" sizes="192x192" href="./img/webrtc-icon-192x192.png" />
     <link
@@ -51,46 +45,26 @@
 
   <body>
     <div id="container">
-      <h1>
-        <a href="//webrtc.github.io/samples/" title="WebRTC samples homepage"
-          >WebRTC samples</a
-        ><span>Select sources &amp; outputs</span>
-      </h1>
+      <h1>WebRTC debug</h1>
 
-      <p>
-        Get available audio, video sources and audio output devices from
-        <code>mediaDevices.enumerateDevices()</code> then set the source for
-        <code>getUserMedia()</code> using a <code>deviceId</code> constraint.
-      </p>
 
       <div class="select">
-        <label for="audioSource">Audio input source: </label
-        ><select id="audioSource"></select>
-      </div>
-
-      <div class="select">
-        <label for="audioOutput">Audio output destination: </label
-        ><select id="audioOutput"></select>
-      </div>
-
-      <div class="select">
-        <label for="videoSource">Video source: </label
+        <label for="videoSource">Cameras: </label
         ><select id="videoSource"></select>
       </div>
 
-      <video id="video" playsinline autoplay></video>
-
+      <div class="video-container">
+        <video id="video" playsinline autoplay></video>
+      </div>
       <p class="small">
-          <pre id="capabilities">
-
-          </pre>
+          <h4>Capabilities</h4>
+          <pre id="capabilities"></pre>
       </p>
 
       <a
         href="https://github.com/webrtc/samples/tree/gh-pages/src/content/devices/input-output"
-        title="View source for this page on GitHub"
         id="viewSource"
-        >View source on GitHub</a
+        >Original source code on Github</a
       >
     </div>
 
