@@ -49,6 +49,8 @@ function gotStream(stream) {
     window.stream = stream; // make stream available to console
     videoElement.srcObject = stream;
 
+    document.getElementById('capabilities').innerHTML = 'loading capabilities...';
+
     // solution from https://www.oberhofer.co/mediastreamtrack-and-its-capabilities/
     videoElement.addEventListener('loadedmetadata', e => {
         window.setTimeout(() => {
