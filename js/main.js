@@ -56,7 +56,8 @@ function gotStream(stream) {
         window.setTimeout(() => {
             // ###################### Log Debug output ######################
             console.log('#####################################################');
-            console.log('Number of Tracks: ', stream.getVideoTracks().length);
+            var numtracks = stream.getVideoTracks().length;
+            console.log('Number of Tracks: ', numtracks);
             var cap = stream.getVideoTracks()[0].getCapabilities();
             console.log('window.stream.getVideoTracks()[0].getCapabilities()');
             console.log(cap);
@@ -64,6 +65,7 @@ function gotStream(stream) {
             var capabilities = JSON.stringify(cap, null, 2);
             console.log('/////////////////////////////////////////////////////');
             document.getElementById('capabilities').innerHTML = capabilities;
+            document.getElementById('numtracks').innerHTML = numtracks;
 
             // ##############################################################
         }, 500);
