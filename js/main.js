@@ -47,12 +47,12 @@ navigator.mediaDevices
 
 function gotStream(stream) {
     window.stream = stream; // make stream available to console
-    videoElement.srcObject = stream;
+  
 
     document.getElementById('capabilities').innerHTML = 'loading capabilities...';
 
     // solution from https://www.oberhofer.co/mediastreamtrack-and-its-capabilities/
-    videoElement.addEventListener('loadedmetadata', e => {
+    videoElement.addEventListener('loadedmetadata', function metadataLoaded() {
         window.setTimeout(() => {
             // ###################### Log Debug output ######################
             console.log('#####################################################');
@@ -63,14 +63,16 @@ function gotStream(stream) {
             console.log(cap);
 
             var capabilities = JSON.stringify(cap, null, 2);
-            console.log('/////////////////////////////////////////////////////');
+
             document.getElementById('capabilities').innerHTML = capabilities;
             document.getElementById('numtracks').innerHTML = numtracks;
-
+            videoElement.removeEventListener('loadedmetadata', metadataLoaded);
             // ##############################################################
         }, 500);
     });
 
+    videoElement.srcObject = stream;
+    
     // Refresh button list in case labels have become available
     return navigator.mediaDevices.enumerateDevices();
 }
