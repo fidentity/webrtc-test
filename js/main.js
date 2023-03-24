@@ -77,6 +77,89 @@ function gotStream(stream) {
     return navigator.mediaDevices.enumerateDevices();
 }
 
+function testCodecs(){
+
+    const codecs = [
+        'avc1',
+        'avc3',
+        // baseline
+        'avc1.42E01E',
+        'avc1.4D401E',
+        'avc1.640028',
+        'avc1.42001E',
+        'avc1.42101E',
+        'avc1.42701E',
+        'avc1.42F01E',
+        'avc3.42E01E',
+        'avc3.42801E',
+        'avc3.42C01E',
+
+
+        // level 1
+        'avc1.42E009',
+        'avc1.42E00A',
+        'avc1.42E00B',
+        'avc1.42E00C',
+        'avc1.42E00D',
+        'avc1.42E00E',
+
+
+        // level 2. bis 4Mbit/s
+        'avc1.42E013',
+        'avc1.42E014',
+        'avc1.42E015',
+        'avc1.42E016',
+        'avc1.42E017',
+
+
+        'vp8',
+        'vp8.0',
+        'vp9.0',
+        'vp09.00.10.08',
+        'vp09.01.10.08',
+        'vp09.02.10.08',
+        'vp09.03.10.08',
+        'av01.0.04M.08',
+    ];
+    const accelerations = ['prefer-hardware', 'prefer-software'];
+
+    const configs = [];
+    for (const codec of codecs) {
+        for (const acceleration of accelerations) {
+            configs.push({
+                codec,
+                hardwareAcceleration: acceleration,
+                width: 640,
+                height: 480,
+            });
+        }
+    }
+
+    const codecsTable = document.getElementById('codecs');
+
+    for (const cfg of configs) {
+        VideoEncoder.isConfigSupported(cfg).then(res =>
+                    {
+                    console.log(JSON.stringify(res));
+
+                    const codecString = res['config']['codec'];
+                    const hardwareAccel = res['config']['hardwareAcceleration'];
+                    const supported = res['supported'];
+
+                    if (supported){
+
+                        codecsTable.innerHTML += `<tr>
+                        <td>${codecString} </td>
+                        <td>${hardwareAccel} </td>
+                        <td>${supported}</td>
+                        </tr>`;
+                    }
+
+            }
+        );
+    }
+}
+
 function handleError(error) {
     console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
@@ -97,6 +180,8 @@ function start() {
         .then(gotStream)
         .then(gotDevices)
         .catch(handleError);
+    
+    testCodecs();
 }
 
 videoSelect.onchange = start;
