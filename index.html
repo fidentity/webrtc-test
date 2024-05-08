@@ -48,21 +48,16 @@
       <h1>WebRTC debug</h1>
 
 
-      <div class="select">
+      <div class="control-section">
         <label for="videoSource">Cameras: </label
         ><select id="videoSource"></select>
-      </div>
-
-      <div class="resolution">
-        <label>Resolution : </label>
-        Width: <input type="number" id="width"  />
-        Height: <input type="number" id="height"  />
+        <input type="number" id="width" placeholder="Width"  />
+        <input type="number" id="height" placeholder="Height" />
         <button id="applyResolution">Apply</button>
       </div>
       <label><a href="https://webrtchacks.github.io/WebRTC-Camera-Resolution/">Resolution finder</a></label>
 
       <div class="video-container">
-
         <video id="video" playsinline autoplay></video>
     </div>
     <div class="snapshot-container">

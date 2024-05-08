@@ -81,7 +81,6 @@ code {
 div#container {
     margin: 0 auto 0 auto;
     max-width: 60em;
-    padding: 1em 1.5em 1.3em 1.5em;
 }
 
 div#links {
@@ -163,12 +162,6 @@ section:last-of-type {
     padding: 0 0 1em 0;
 }
 
-select {
-    margin: 0 1em 1em 0;
-    position: relative;
-    top: -1px;
-}
-
 h1 span {
     white-space: nowrap;
 }
@@ -228,6 +221,19 @@ pre {
     font-size: 12px;
 }
 
+.control-section {
+    display: flex;
+    flex-direction: column;
+    select {
+        max-width: 400px;
+    }
+
+    button,
+    input {
+        margin-top: 0.5rem;
+        width: 100px;
+    }
+}
 .video-container {
     display: flex;
     flex: 1;
