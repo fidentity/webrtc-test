@@ -11,8 +11,11 @@
 const videoElement = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
 const selectors = [videoSelect];
-const button = document.getElementById('snapshot');
+const snapshotButton = document.getElementById('snapshot');
 const canvas = (window.canvas = document.getElementById('canvas'));
+const widthInput = document.getElementById('width');
+const heightInput = document.getElementById('height');
+const applyResolutionButton = document.getElementById('applyResolution');
 
 function gotDevices(deviceInfos) {
     deviceInfos = deviceInfos.filter((x) => x.kind === 'videoinput');
@@ -154,32 +157,45 @@ function start() {
         });
     }
     const videoSource = videoSelect.value;
+
+    // get width and height from input fields, if set. else use default values
+    const width = widthInput.value ? widthInput.value : undefined;
+    const height = heightInput.value ? heightInput.value : undefined;
+
     const constraints = {
         audio: false,
-        video: { deviceId: videoSource ? { exact: videoSource } : undefined },
+        video: {
+            deviceId: videoSource ? { exact: videoSource } : undefined,
+            width: width ? { exact: width } : undefined,
+            height: height ? { exact: height } : undefined,
+        },
     };
     navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 
-    button.onclick = function () {
+    snapshotButton.onclick = function () {
+        // clear snapshot-output container
+        document.querySelector('.snapshot-output').innerHTML = '';
+
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
         var resolution = document.createElement('div');
         resolution.innerHTML = 'Resolution: ' + canvas.width + 'x' + canvas.height;
-        document.querySelector('.snapshot-container').appendChild(resolution);
+
+        document.querySelector('.snapshot-output').appendChild(resolution);
 
         // create download link
         var a = document.createElement('a');
         a.href = canvas.toDataURL('image/png');
         a.download = 'snapshot.png';
         a.innerHTML = 'Download Snapshot';
-        document.querySelector('.snapshot-container').appendChild(a);
+        document.querySelector('.snapshot-output').appendChild(a);
     };
 
     testCodecs();
 }
 
 videoSelect.onchange = start;
-
+applyResolutionButton.onclick = start;
 start();

@@ -53,6 +53,14 @@
         ><select id="videoSource"></select>
       </div>
 
+      <div class="resolution">
+        <label>Resolution : </label>
+        Width: <input type="number" id="width"  />
+        Height: <input type="number" id="height"  />
+        <button id="applyResolution">Apply</button>
+      </div>
+      <label><a href="https://webrtchacks.github.io/WebRTC-Camera-Resolution/">Resolution finder</a></label>
+
       <div class="video-container">
 
         <video id="video" playsinline autoplay></video>
@@ -60,6 +68,7 @@
     <div class="snapshot-container">
         <button id="snapshot">Take snapshot</button>
         <canvas id="canvas" style="max-width: 400px;"></canvas>
+        <div class="snapshot-output"></div>
     </div>
 
       <p class="small">
