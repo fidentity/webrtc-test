@@ -233,6 +233,13 @@ pre {
     flex: 1;
     justify-content: center;
 }
+.snapshot-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 video {
     background: #222;
     margin: 0 0 20px 0;
@@ -245,22 +252,22 @@ ul {
     margin: 0 0 0.5em 0;
 }
 
-
- table.codecs {
+table.codecs {
     width: 100%;
     height: 200px;
     text-align: center;
     border-collapse: collapse;
-    }
-    table.codecs td, table.codecs th {
-    border: 1px solid #FFFFFF;
-    }
-    table.codecs tr:nth-child(even) {
-    background: #BEC3C4;
-    }
-    table.codecs tfoot td {
+}
+table.codecs td,
+table.codecs th {
+    border: 1px solid #ffffff;
+}
+table.codecs tr:nth-child(even) {
+    background: #bec3c4;
+}
+table.codecs tfoot td {
     font-size: 14px;
-    }
+}
 
 @media screen and (max-width: 650px) {
     .highlight {
