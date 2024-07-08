@@ -78,7 +78,8 @@ function gotStream(stream) {
     return navigator.mediaDevices.enumerateDevices();
 }
 
-function testCodecs() {
+async function testCodecs() {
+    console.log('TestCodecs');
     const codecs = [
         // baseline
         'avc1.42E01E',
@@ -111,6 +112,13 @@ function testCodecs() {
         'vp09.02.10.08',
         'vp09.03.10.08',
         'av01.0.04M.08',
+
+        // av1 scheint noch nicht wirklich irgendwo supported zu sein. wäre aber interessant.
+        // https://www.matroska.org/technical/codec_specs.html
+        // av01.2.19H.12.0.000.09.16.09.1
+        // https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter#av1
+        // av01.<profile>.<level><tier>.<bitDepth>.<monochrome>.<chromaSubsampling>.<colorPrimaries>.<transferCharacteristics>.<matrixCoefficients>.<videoFullRangeFlag></videoFullRangeFlag>
+        // av01.P.LLT.DD[.M.CCC.cp.tc.mc.F]
     ];
     const accelerations = ['prefer-hardware', 'prefer-software'];
 
@@ -120,16 +128,18 @@ function testCodecs() {
             configs.push({
                 codec,
                 hardwareAcceleration: acceleration,
-                width: 640,
-                height: 480,
+                width: 1280,
+                height: 1280,
             });
         }
     }
 
     const codecsTable = document.getElementById('codecs');
 
+    let codecsObj = [];
+
     for (const cfg of configs) {
-        VideoEncoder.isConfigSupported(cfg).then((res) => {
+        await VideoEncoder.isConfigSupported(cfg).then((res) => {
             console.log(JSON.stringify(res));
 
             const codecString = res['config']['codec'];
@@ -137,12 +147,19 @@ function testCodecs() {
             const supported = res['supported'];
 
             if (supported) {
-                codecsTable.innerHTML += `<tr>
-                        <td>${codecString} </td>
-                        <td>${hardwareAccel} </td>
-                        </tr>`;
+                codecsObj.push({ codec: codecString, hardwareAcceleration: hardwareAccel });
             }
         });
+    }
+
+    // sort by codec, descending
+    codecsObj.sort((a, b) => (a.codec > b.codec ? 1 : -1));
+
+    for (const c of codecsObj) {
+        codecsTable.innerHTML += `<tr>
+                <td>${c.codec} </td>
+                <td>${c.hardwareAcceleration} </td>
+                </tr>`;
     }
 }
 
@@ -150,7 +167,7 @@ function handleError(error) {
     console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
-function start() {
+async function start() {
     if (window.stream) {
         window.stream.getTracks().forEach((track) => {
             track.stop();
@@ -193,9 +210,11 @@ function start() {
         document.querySelector('.snapshot-output').appendChild(a);
     };
 
-    testCodecs();
+    await testCodecs();
 }
 
 videoSelect.onchange = start;
 applyResolutionButton.onclick = start;
-start();
+
+// call start() asynchronously
+setTimeout(start, 0);
