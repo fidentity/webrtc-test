@@ -79,7 +79,11 @@ function gotStream(stream) {
 }
 
 async function testCodecs() {
-    console.log('TestCodecs');
+    const codecsTable = document.getElementById('codecs');
+
+    // clear codecsTable
+    codecsTable.innerHTML = '';
+
     const codecs = [
         // baseline
         'avc1.42E01E',
@@ -143,8 +147,6 @@ async function testCodecs() {
         }
     }
 
-    const codecsTable = document.getElementById('codecs');
-
     let codecsObj = [];
 
     for (const cfg of configs) {
@@ -182,6 +184,7 @@ async function start() {
             track.stop();
         });
     }
+
     const videoSource = videoSelect.value;
 
     // get width and height from input fields, if set. else use default values
