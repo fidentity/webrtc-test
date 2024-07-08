@@ -111,9 +111,18 @@ async function testCodecs() {
         'vp09.01.10.08',
         'vp09.02.10.08',
         'vp09.03.10.08',
+        'av01.0.00M.08',
+        'av01.0.00M.08',
+        'av01.0.01M.08',
         'av01.0.04M.08',
 
         // av1 scheint noch nicht wirklich irgendwo supported zu sein. wäre aber interessant.
+        //   mp4        256x144    144p   73k , 'av01.0.05M.08',av01.0.00M.08, 25fps, video only, 1.72MiB
+        //   mp4        426x240    240p  159k , a'av01.0.08M.08',v01.0.00M.08, 25fps, video only, 3.42MiB
+        //   mp4        640x360    360p  340k , av01.0.01M.08, 25fps, video only, 6.68MiB
+        //   mp4        854x480    480p  603k , av01.0.04M.08, 25fps, video only, 11.37MiB
+        //   mp4        1280x720   720p 1133k , av01.0.05M.08, 25fps, video only, 22.07MiB
+        //   mp4        1920x1080  1080p 2106k , av01.0.08M.08, 25fps, video only, 40.74MiB
         // https://www.matroska.org/technical/codec_specs.html
         // av01.2.19H.12.0.000.09.16.09.1
         // https://developer.mozilla.org/en-US/docs/Web/Media/Formats/codecs_parameter#av1
