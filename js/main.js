@@ -119,6 +119,22 @@ async function testCodecs() {
         'av01.0.00M.08',
         'av01.0.01M.08',
         'av01.0.04M.08',
+        'av01.0.05M.08',
+        'av01.0.08M.08',
+        'av01.0.12M.08',
+        'av01.0.12M.08',
+        'av01.0.16M.08',
+
+        // youtube:
+        // youtube 144p:        av01.0.00M.08
+        // youtube 240p:        av01.0.00M.08
+        // youtube 320p:        av01.0.01M.08
+        // youtube 480p:        av01.0.04M.08
+        // youtube 720p:        av01.0.05M.08
+        // youtube 1080p (Hd):  av01.0.08M.08
+        // youtube, 1440p:      av01.0.12M.08
+        // youtube, 2160p (4k): av01.0.12M.08
+        // youtube, 4320p (8k): av01.0.16M.08
 
         // av1 scheint noch nicht wirklich irgendwo supported zu sein. wäre aber interessant.
         //   mp4        256x144    144p   73k , 'av01.0.05M.08',av01.0.00M.08, 25fps, video only, 1.72MiB
