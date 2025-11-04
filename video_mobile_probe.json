@@ -1,0 +1,33 @@
+{
+    "sampler": "rVFC",
+    "nFrames": 181,
+    "durationMs": 5981.699999988079,
+    "fpsEst": 30.091779928842758,
+    "ifi": {
+        "meanMs": 33.232,
+        "medianMs": 33.4,
+        "stdMs": 8.349,
+        "cv": 0.251246,
+        "p90Ms": 41.7,
+        "p99Ms": 50,
+        "dropRate": 0,
+        "acf": {
+            "bestLag": 2,
+            "bestCorr": 0.454698
+        },
+        "spectrum": {
+            "peakFreqHz": 14.9283,
+            "peakStrength": 0.037172
+        }
+    },
+    "drift": {
+        "meanMsPerFrame": 47.987,
+        "medianMsPerFrame": 0.003,
+        "stdMsPerFrame": 641.968,
+        "p90MsPerFrame": 0.065
+    },
+    "raw": {
+        "samples": [22132.30000001192, 22173.5, 22198.599999964237, 22240.30000001192, 22265.599999964237],
+        "ifiCount": 180
+    }
+}
