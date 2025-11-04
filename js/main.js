@@ -108,6 +108,43 @@ function hamming(a, b) {
     return count;
 }
 
+function loadVideo(event) {
+    console.log('loadVideo', event);
+    const file = event.target.files[0];
+
+    if (!file) {
+        console.error('No file selected');
+        return;
+    }
+
+    // Stop any existing camera stream
+    if (window.stream) {
+        window.stream.getTracks().forEach((track) => {
+            track.stop();
+        });
+        window.stream = null;
+    }
+
+    // Clear any existing srcObject (camera stream)
+    videoElement.srcObject = null;
+
+    const url = URL.createObjectURL(file);
+    videoElement.src = url;
+    videoElement.loop = true;
+
+    videoElement.height = 640;
+    videoElement.load();
+
+    videoElement.onloadeddata = () => {
+        console.log('Video loaded successfully');
+        videoElement.play().catch((e) => console.error('Error playing video:', e));
+    };
+
+    videoElement.onerror = (e) => {
+        console.error('Error loading video:', e);
+    };
+}
+
 async function getDebugOutput() {
     const output = {};
     output['User Agent'] = navigator.userAgent;
@@ -258,7 +295,7 @@ async function start(constraints = { audio: false, video: true }) {
         .getUserMedia(constraints)
         .then((mediaStream) => {
             window.stream = mediaStream; // make globally available
-            video.srcObject = mediaStream;
+            videoElement.srcObject = mediaStream;
 
             //Now enumerate devices
             navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
@@ -303,7 +340,7 @@ async function start(constraints = { audio: false, video: true }) {
         document.getElementById('debug-out').textContent = JSON.stringify(debugOutput, null, 2);
     };
 
-    // await testCodecs();
+    await testCodecs();
 }
 
 videoSelect.onchange = start;
@@ -324,6 +361,31 @@ applyResolutionButton.onclick = () => {
     };
     start(constraints);
 };
+
+// Setup video file input event listener
+const videoFileInput = document.getElementById('videoFile');
+if (videoFileInput) {
+    videoFileInput.addEventListener('change', loadVideo);
+    console.log('Video file input event listener added successfully');
+} else {
+    console.error('Video file input element not found - DOM may not be ready');
+}
+
+// Setup camera button event listener
+const useCameraBtn = document.getElementById('useCameraBtn');
+if (useCameraBtn) {
+    useCameraBtn.addEventListener('click', () => {
+        // Clear video file source
+        videoElement.src = '';
+        // Clear the file input
+        if (videoFileInput) {
+            videoFileInput.value = '';
+        }
+        // Start camera
+        start();
+    });
+    console.log('Use camera button event listener added successfully');
+}
 
 // Start initially with default constraints
 setTimeout(start, 0);
