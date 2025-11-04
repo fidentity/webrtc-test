@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html >
   <head>
     <meta charset="utf-8" />
     <meta name="description" content="WebRTC code samples" />
@@ -19,11 +19,7 @@
     <title>WebRtc Debug</title>
 
     <link rel="icon" sizes="192x192" href="./img/webrtc-icon-192x192.png" />
-    <link
-      href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700"
-      rel="stylesheet"
-      type="text/css"
-    />
+
     <link rel="stylesheet" href="./css/main.css" />
 
     <style>
@@ -43,7 +39,7 @@
     </style>
   </head>
 
-  <body>
+  <body  >
     <div id="container">
       <h1>WebRTC debug</h1>
 
@@ -82,6 +78,14 @@
               <tbody id="codecs"></tbody>
             </table>
       </p>
+
+      <p class="small">
+          <h4>Video Timing probe</h4>
+          <button id="run-timing-probe">Run Timing Probe</button>
+          <pre id="timing-out"></pre>
+          <h4>Debug Output</h4>
+          <pre id="debug-out"></pre>
+      </p>
       <a
         href="https://github.com/webrtc/samples/tree/gh-pages/src/content/devices/input-output"
         id="viewSource"
@@ -91,5 +95,6 @@
 
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="./js/main.js" async></script>
+    <script src="./js/timing-probe.js" async></script>
   </body>
 </html>

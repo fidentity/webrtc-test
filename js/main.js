@@ -18,7 +18,8 @@ const heightInput = document.getElementById('height');
 const applyResolutionButton = document.getElementById('applyResolution');
 
 function gotDevices(deviceInfos) {
-    deviceInfos = deviceInfos.filter((x) => x.kind === 'videoinput');
+    console.log('gotDevices', deviceInfos);
+    // deviceInfos = deviceInfos.filter((x) => x.kind === 'videoinput');
     // Handles being called several times to update labels. Preserve values.
     const values = selectors.map((select) => select.value);
     selectors.forEach((select) => {
@@ -44,8 +45,6 @@ function gotDevices(deviceInfos) {
         }
     });
 }
-
-navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 
 function gotStream(stream) {
     window.stream = stream; // make stream available to console
@@ -76,6 +75,60 @@ function gotStream(stream) {
 
     // Refresh button list in case labels have become available
     return navigator.mediaDevices.enumerateDevices();
+}
+
+function aHash(imageData, w = 8, h = 8) {
+    // assume imageData is ImageData for canvas resized to w x h
+    const px = imageData.data;
+    let sum = 0;
+    const vals = [];
+    for (let i = 0; i < w * h; i++) {
+        const r = px[i * 4],
+            g = px[i * 4 + 1],
+            b = px[i * 4 + 2];
+        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        vals.push(lum);
+        sum += lum;
+    }
+    const mean = sum / (w * h);
+    let hash = 0n;
+    for (let i = 0; i < vals.length; i++) {
+        if (vals[i] >= mean) hash |= 1n << BigInt(i);
+    }
+    return hash; // BigInt 64-bit
+}
+
+function hamming(a, b) {
+    let x = a ^ b;
+    let count = 0;
+    while (x) {
+        count += Number(x & 1n);
+        x >>= 1n;
+    }
+    return count;
+}
+
+async function getDebugOutput() {
+    const output = {};
+    output['User Agent'] = navigator.userAgent;
+    output['Languages'] = navigator.languages;
+    output['Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    output['Screen'] = { w: screen.width, h: screen.height, avail: screen.availWidth };
+    output['Platform'] = navigator.platform;
+    output['Architecture'] = navigator.architecture;
+
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+            const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+            if (dbg) {
+                output['GPU Vendor'] = gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL);
+                output['GPU Renderer'] = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL);
+            }
+        }
+    } catch (e) {}
+    return output;
 }
 
 async function testCodecs() {
@@ -194,28 +247,31 @@ function handleError(error) {
     console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
-async function start() {
+async function start(constraints = { audio: false, video: true }) {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('You need a browser that supports WebRTC');
+        return;
+    }
+
+    console.log('start > using constraints:', constraints);
+    navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then((mediaStream) => {
+            window.stream = mediaStream; // make globally available
+            video.srcObject = mediaStream;
+
+            //Now enumerate devices
+            navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
+        })
+        .catch((error) => {
+            console.error('getUserMedia error!', error);
+        });
+
     if (window.stream) {
         window.stream.getTracks().forEach((track) => {
             track.stop();
         });
     }
-
-    const videoSource = videoSelect.value;
-
-    // get width and height from input fields, if set. else use default values
-    const width = widthInput.value ? widthInput.value : undefined;
-    const height = heightInput.value ? heightInput.value : undefined;
-
-    const constraints = {
-        audio: false,
-        video: {
-            deviceId: videoSource ? { exact: videoSource } : undefined,
-            width: width ? { exact: width } : undefined,
-            height: height ? { exact: height } : undefined,
-        },
-    };
-    navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
 
     snapshotButton.onclick = function () {
         // clear snapshot-output container
@@ -238,11 +294,36 @@ async function start() {
         document.querySelector('.snapshot-output').appendChild(a);
     };
 
-    await testCodecs();
+    document.getElementById('run-timing-probe').onclick = async function () {
+        document.getElementById('timing-out').textContent = 'running timing probe...';
+        document.getElementById('debug-out').textContent = 'gathering debug output...';
+        const metrics = await runTimingProbe(window.stream, { durationMs: 6000, targetFps: 30 });
+        document.getElementById('timing-out').textContent = JSON.stringify(metrics, null, 2);
+        const debugOutput = await getDebugOutput();
+        document.getElementById('debug-out').textContent = JSON.stringify(debugOutput, null, 2);
+    };
+
+    // await testCodecs();
 }
 
 videoSelect.onchange = start;
-applyResolutionButton.onclick = start;
+applyResolutionButton.onclick = () => {
+    const videoSource = videoSelect.value;
 
-// call start() asynchronously
+    // get width and height from input fields, if set. else use default values
+    const width = widthInput.value ? widthInput.value : undefined;
+    const height = heightInput.value ? heightInput.value : undefined;
+
+    const constraints = {
+        audio: false,
+        video: {
+            deviceId: videoSource ? { exact: videoSource } : undefined,
+            width: width ? { exact: width } : undefined,
+            height: height ? { exact: height } : undefined,
+        },
+    };
+    start(constraints);
+};
+
+// Start initially with default constraints
 setTimeout(start, 0);
