@@ -1,18 +1,10 @@
 // timing-probe.js
 // Collects inter-frame intervals (IFIs), jitter, and drift between media time and system time.
 
-async function runTimingProbe(stream, opts = {}) {
+async function runTimingProbe(video, opts = {}) {
     const { durationMs = 5000, targetFps = 30 } = opts;
 
     const t0 = performance.now();
-    const [track] = stream.getVideoTracks();
-
-    // Prepare hidden video element
-    const video = document.createElement('video');
-    video.playsInline = true;
-    video.muted = true;
-    video.srcObject = stream;
-    await video.play();
 
     const samples = []; // system timestamp (ms, perf.now)
     const vtimes = []; // media timestamp (s, video.currentTime)
